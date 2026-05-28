@@ -1,0 +1,19 @@
+<h1>Название: {{ book_id.title }}</h1>
+<h2>Автор: {{ book_id.author }}</h2>
+<h2>Жанр: {{ book_id.genre }}</h2>
+<p>Описание: {{ book_id.description }}</p>
+<p>Год публикации: {{ book_id.publication_year }}</p>
+<p>Страниц: {{ book_id.pages }}</p>
+<p>Издательство книги: {{ book_id.publisher }}</p>
+<br>
+<p>Рейтинг книги: {{ book_id.rating }}</p>
+</br>
+{% if i.cover %}
+<img src="book_id.cover" alt="">
+{% else %}
+<p>Изображение обложки не было добавлено</p>
+{% endif %}
+<p>Забронированно: {{ book_id.reservation_limit }} из 5</p>
+
+<br>
+<a href="{% url 'book_list' %}">НАЗАД</a>

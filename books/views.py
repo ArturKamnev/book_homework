@@ -1,12 +1,21 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse
+from datetime import datetime
+from . import models
 
 # Create your views here.
-def book_information(request):
+def book_list_view(request):
     if request.method == "GET":
+        book = models.Books.objects.all().order_by('-id')
         context = {
-            'author': 'Джоан Роулинг',
-            'universe': 'Гарри Поттер',
-            'title': 'Гарри Поттер и Узник Азкабана',
-            'date_of_publish': '1999',
+            'book': book,
         }
-    return render(request, 'books_view.html', context)
+    return render(request=request, template_name='books_view.html', context=context)
+
+def book_list_detail_view(request, id):
+    if request.method == "GET":
+        book_id = get_object_or_404(models.Books, id=id)
+        context = {
+            'book_id': book_id,
+        }
+    return render(request=request, template_name='books_view_detailed.html', context=context)
