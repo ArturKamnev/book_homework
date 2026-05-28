@@ -8,8 +8,8 @@
 <br>
 <p>Рейтинг книги: {{ book_id.rating }}</p>
 </br>
-{% if i.cover %}
-<img src="book_id.cover" alt="">
+{% if book_id.cover %}
+<img src="book_id.cover.url" alt="">
 {% else %}
 <p>Изображение обложки не было добавлено</p>
 {% endif %}
