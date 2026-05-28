@@ -7,7 +7,7 @@
         <h2>Название: {{ i.title }}</h2>
         <p>Автор: {{ i.author }}</p>
         {% if i.cover %}
-        <img src="i.cover.url" alt="">
+        <img src="{{ i.cover.url }}" alt="">
         {% else %}
         <p>Изображение обложки не было добавлено</p>
         {% endif %}
