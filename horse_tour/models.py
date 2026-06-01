@@ -30,7 +30,7 @@ class Horse(models.Model):
 class Person(models.Model):
     name = models.TextField(verbose_name="Имя заказчика", max_length=30)
     surname = models.TextField(verbose_name="Фамилия заказчика", max_length=30)
-    phone = models.CharField(verbose_name="Номер телефона заказчика")
+    phone = models.CharField(verbose_name="Номер телефона заказчика", max_length=20)
     age = models.PositiveIntegerField(verbose_name="Возраст заказчика")
     horse = models.OneToOneField(Horse, on_delete=models.CASCADE)
     def __str__(self):
@@ -45,7 +45,7 @@ class Tour(models.Model):
     title = models.TextField(verbose_name="Название тура")
     description = models.TextField(verbose_name="Описание тура")
     price = models.PositiveIntegerField(verbose_name="Цена тура")
-    duration = models.CharField(verbose_name="Длительность тура")
+    duration = models.CharField(verbose_name="Длительность тура", max_length=50)
     created_at = models.DateField(auto_now_add=True)
     categories = models.ManyToManyField(Category)
 
