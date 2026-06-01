@@ -1,0 +1,80 @@
+<h1>КОННЫЕ ТУРЫ</h1>
+
+<ul>
+    {% for i in tours %}
+    <li>
+        <h2>Название тура: {{ i.title }}</h2>
+        <p>Описание тура: {{ i.description }}</p>
+        <p>Цена тура: {{ i.price }} сом</p>
+        <p>Длительность тура: {{ i.duration }}</p>
+        <p>Создано: {{ i.created_at }}</p>
+
+        <br>
+
+        <h2>КАТЕГОРИИ ТУРА</h2>
+
+        <p>
+            {% for category in i.categories.all %}
+                {{ category.name }}{% if not forloop.last %}, {% endif %}
+            {% empty %}
+                Категория не указана
+            {% endfor %}
+        </p>
+
+        <h3>ОТЗЫВЫ</h3>
+
+        <ul>
+            {% for rev in i.reviews.all %}
+            <li>
+                <p>Оценка: {{ rev.mark }}</p>
+                <p>Текст: {{ rev.text }}</p>
+                <p>Дата создания: {{ rev.created_at }}</p>
+            </li>
+            {% empty %}
+            <li>
+                <p>Отзывов пока нет</p>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <hr>
+    </li>
+    {% empty %}
+    <li>
+        <p>Туры пока не добавлены</p>
+    </li>
+    {% endfor %}
+</ul>
+
+
+<h1>ЗАБРОНИРОВАННЫЕ ЛОШАДИ</h1>
+
+<ul>
+    {% for person in persons %}
+    <li>
+        <h2>Заказчик: {{ person.name }} {{ person.surname }}</h2>
+
+        <p>Телефон: {{ person.phone }}</p>
+
+        <p>Возраст: {{ person.age }}</p>
+
+        <h3>ЛОШАДЬ</h3>
+
+        {% if person.horse %}
+            <p>Кличка лошади: {{ person.horse.name }}</p>
+            <p>Порода лошади: {{ person.horse.breed }}</p>
+            <p>Возраст лошади: {{ person.horse.age }}</p>
+            <p>Описание лошади: {{ person.horse.description }}</p>
+
+        {% else %}
+            <p>Лошадь не забронирована</p>
+        {% endif %}
+
+        <hr>
+    </li>
+    {% empty %}
+    <li>
+        <p>Заказчики пока не добавлены</p>
+    </li>
+    {% endfor %}
+</ul>
