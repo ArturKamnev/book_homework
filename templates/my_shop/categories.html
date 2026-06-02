@@ -4,7 +4,7 @@
 
     {% for i in categories %}
     <li>
-        <h2>Наименование: {{ i.name }}</h2>
+        <a href="{% url 'categories_product_list' i.id %}">{{ i.name }}</a>
     </li>
     {% endfor %}
 
