@@ -1,0 +1,13 @@
+<h1>ПРОДУКТЫ</h1>
+
+<ul>
+
+    {% for i in products %}
+    <li>
+        <h2>Наименование: {{ i.name }}</h2>
+        <p>Цена: {{ i.price }}</p>
+        <a href="{% url 'categories_product_list' i.category.id %}">{{ i.category.name }}</a>
+    </li>
+    {% endfor %}
+
+</ul>
