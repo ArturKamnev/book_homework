@@ -1,0 +1,9 @@
+<h1>Добавить продукт</h1>
+<a href="{% url 'products_list' %}">К списку продуктов</a>
+<form action="{% url 'create_products' %}" method="POST" enctype="multipart/form-data">
+
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Отправить</button>
+
+</form>

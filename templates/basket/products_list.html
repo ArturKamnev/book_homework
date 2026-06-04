@@ -1,0 +1,20 @@
+<h1>ПРОДУКТЫ В КОРЗИНЕ</h1>
+<a href="{% url 'create_products' %}">Добавить продукт</a>
+<ul>
+    {% for i in products %}
+    <li>
+        <h2>Наименование: {{ i.name }}</h2>
+        <p>Цена: {{ i.price }}</p>
+        {% if i.image %}
+        <img src="{{ i.image.url }}" alt="">
+        {% else %}
+        <p>Изображение не было добавлено</p>
+        {% endif %}
+        <p>Количество: {{ i.quantity }}</p>
+        <br>
+        <p>Описание: {{ i.description }}</p>
+        <a href="{% url 'delete_products' i.id %}">Удалить</a>
+        <a href="{% url 'update_products' i.id %}">Редактировать</a>
+    </li>
+    {% endfor %}
+</ul>
