@@ -18,14 +18,14 @@ def register_view(request):
 
 def auth_login_view(request):
     if request.method == "POST":
-        form = AuthenticationForm(data=request.POST)
+        form = forms.CustomLoginForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
             return redirect('/candidates_list/')
         
     else:
-        form = AuthenticationForm()
+        form = forms.CustomLoginForm()
     return render(request=request, template_name='customRegistration/login.html', context={'form': form})
 
 def auth_logout_view(request):
@@ -33,7 +33,11 @@ def auth_logout_view(request):
     return redirect('/login/')
 
 def candidates_list_view(request):
-    if request.method == "GET":
-        candidates = models.CustomUser.objects.all().order_by('-id')
-    return render(request=request, template_name='customRegistration/candidates_list.html', context={'candidates': candidates})
+    candidates = models.CustomUser.objects.all().order_by('-id')
+
+    context = {
+        'candidates': candidates
+    }
+
+    return render(request, 'customRegistration/candidates_list.html', context)
 

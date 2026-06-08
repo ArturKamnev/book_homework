@@ -1,5 +1,18 @@
 <h1> СПИСОК КАНДИДАТОВ </h1>
 
+{% if not request.user.is_authenticated %}
+    <h3>Вы не вошли в свой аккаунт</h3>
+    <a href="{% url 'login' %}">Войти в аккаунт</a>
+{% else %}
+    <h3>Вы вошли как {{ request.user.username }}</h3>
+    <form method="post">
+
+    {% csrf_token %}
+    <a href="{% url 'logout' %}">Выйти из аккаунта</a>
+
+    </form>
+{% endif %}
+
 <ul>
     {% for i in candidates %}
     <li>
@@ -10,9 +23,3 @@
     </li>
     {% endfor %}
 </ul>
-<form method="post">
-
-    {% csrf_token %}
-    <a href="{% url 'logout' %}">Выйти из аккаунта</a>
-
-</form>
