@@ -8,7 +8,7 @@ class CustomRegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
     phone_number = forms.CharField(max_length=100, initial='+996', required=True)
     date_of_birth = forms.DateField(required=True)
-    desired_position = forms.CharField(max_length=100, required=False)
+    desired_position = forms.CharField(max_length=100, required=True)
     education = forms.CharField(max_length=50, required=True)
     work_experience = forms.CharField(max_length=300, required=True)
     skills = forms.CharField(max_length=100, required=True)

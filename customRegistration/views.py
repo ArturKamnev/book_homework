@@ -2,8 +2,6 @@ from django.shortcuts import render, redirect
 from . import models, forms
 # Create your views here.
 from django.contrib.auth import login, logout
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.models import User
 
 def register_view(request):
     if request.method == "POST":
