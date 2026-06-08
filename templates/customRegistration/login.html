@@ -1,0 +1,11 @@
+<h1>АВТОРИЗАЦИЯ</h1>
+
+<form method="post" enctype="multipart/form-data">
+
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit"> Авторизация </button>
+
+
+</form>
+<a href="{% url 'registration' %}">У вас нет аккаунта?</a>

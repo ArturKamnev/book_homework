@@ -1,0 +1,18 @@
+<h1> СПИСОК КАНДИДАТОВ </h1>
+
+<ul>
+    {% for i in candidates %}
+    <li>
+        <h2>{{ i.full_name }}</h2>
+        <p>Образование: {{ i.education }}</p>
+        <p>Желаемая должность: {{ i.desired_position }}</p>
+        <p>Навыки: {{ i.skills }}</p>
+    </li>
+    {% endfor %}
+</ul>
+<form method="post">
+
+    {% csrf_token %}
+    <a href="{% url 'logout' %}">Выйти из аккаунта</a>
+
+</form>

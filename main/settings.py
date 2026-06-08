@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'horse_tour',
     'myShop',
     'basket',
+    'captcha',
+    'customRegistration',
 ]
 
 MIDDLEWARE = [
