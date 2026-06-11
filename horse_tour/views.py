@@ -7,11 +7,15 @@ from django.db.models import F
 
 def search_view(request):
     query = request.GET.get('s', '')
+
     if query:
-        tour = models.Tour.objects.filter(title__icontains=query)
+        tours = models.Tour.objects.filter(title__icontains=query)
     else:
         return HttpResponse('Тур не найден')
-    return render(request, template_name='tours.html', context={'tours': tour})
+
+    persons = models.Person.objects.all()
+
+    return render(request, 'tours.html',{'tours': tours, 'persons': persons,})
 
 def tour_list_view(request):
     if request.method == "GET":

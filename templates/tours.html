@@ -2,7 +2,7 @@
 
 <form method="get" enctype="multipart/form-data" action="{% url 'tours_search' %}">
 
-    <input type="text" type="search" placeholder="Найти персонажа" name="s">
+    <input type="search" placeholder="Найти персонажа" name="s">
     <button type="submit">Поиск</button>
 
 </form>
@@ -86,6 +86,7 @@
     {% endfor %}
 </ul>
 
+{% if tours.paginator %}
 <div class="pagination">
         <span class="step-links">
             {% if tours.has_previous %}
@@ -103,3 +104,4 @@
             {% endif %}
         </span>
 </div>
+{% endif %}
