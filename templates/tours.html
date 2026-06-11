@@ -1,6 +1,6 @@
 <h1>КОННЫЕ ТУРЫ</h1>
 
-<form method="get" enctype="multipart/form-data" action="{% url 'search' %}">
+<form method="get" enctype="multipart/form-data" action="{% url 'tours_search' %}">
 
     <input type="text" type="search" placeholder="Найти персонажа" name="s">
     <button type="submit">Поиск</button>
@@ -88,18 +88,18 @@
 
 <div class="pagination">
         <span class="step-links">
-            {% if book.has_previous %}
+            {% if tours.has_previous %}
                 <a href="?page=1">&laquo; Первая</a>
-                <a href="?page={{ book.previous_page_number }}">Предыдущая</a>
+                <a href="?page={{ tours.previous_page_number }}">Предыдущая</a>
             {% endif %}
 
             <span class="current">
-                Страница {{ book.number }} из {{ book.paginator.num_pages }}.
+                Страница {{ tours.number }} из {{ tours.paginator.num_pages }}.
             </span>
 
-            {% if book.has_next %}
-                <a href="?page={{ book.next_page_number }}">Следующая</a>
-                <a href="?page={{ book.paginator.num_pages }}">Последняя &raquo;</a>
+            {% if tours.has_next %}
+                <a href="?page={{ tours.next_page_number }}">Следующая</a>
+                <a href="?page={{ tours.paginator.num_pages }}">Последняя &raquo;</a>
             {% endif %}
         </span>
 </div>

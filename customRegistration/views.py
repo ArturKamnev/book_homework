@@ -10,13 +10,9 @@ def search_view(request):
     query = request.GET.get('s', '')
     if query:
         candidate = models.CustomUser.objects.filter(full_name__icontains=query)
-        if candidate:
-            context = {
-                'candidates': candidate
-            }
     else:
         return HttpResponse('Кандидаты не найдены')
-    return render(request=request, template_name='customRegistration/candidates_list.html', context=context)
+    return render(request=request, template_name='customRegistration/candidates_list.html', context={'candidates': candidate})
 
 def register_view(request):
     if request.method == "POST":
@@ -64,9 +60,10 @@ def candidate_detailed_view(request, id):
 
         if id not in views_candidate:
             candidate.views = F('views') + 1
+            views_candidate.append(id)
+
             candidate.save()
-            candidate.refresh_from_db
-        views_candidate.append(id)
+            candidate.refresh_from_db()
         request.session['viewed_candidate'] = views_candidate
 
         context = {

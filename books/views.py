@@ -32,9 +32,9 @@ def book_list_detail_view(request, id):
 
         if id not in views_book:
             book_id.views = F('views') + 1
+            views_book.append(id)
             book_id.save()
             book_id.refresh_from_db()
-        views_book.append(id)
         request.session['viewed_book'] = views_book
 
 

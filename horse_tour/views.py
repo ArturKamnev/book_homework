@@ -34,9 +34,10 @@ def tour_list_detailed_view(request, id):
 
         if id not in views_tour:
             tour.views = F('views') + 1
+            views_tour.append(id)
             tour.save()
+
             tour.refresh_from_db()
-        views_tour.append(id)
         request.session['viewed_tour'] = views_tour
 
         context = {
