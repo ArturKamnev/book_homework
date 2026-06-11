@@ -1,5 +1,12 @@
 <h1>КОННЫЕ ТУРЫ</h1>
 
+<form method="get" enctype="multipart/form-data" action="{% url 'search' %}">
+
+    <input type="text" type="search" placeholder="Найти персонажа" name="s">
+    <button type="submit">Поиск</button>
+
+</form>
+
 <ul>
     {% for i in tours %}
     <li>
@@ -8,7 +15,7 @@
         <p>Цена тура: {{ i.price }} сом</p>
         <p>Длительность тура: {{ i.duration }}</p>
         <p>Создано: {{ i.created_at }}</p>
-
+        <a href="{% url 'tour_detailed' i.id %}"> ПОДРОБНЕЕ </a>
         <br>
 
         <h2>КАТЕГОРИИ ТУРА</h2>
@@ -78,3 +85,21 @@
     </li>
     {% endfor %}
 </ul>
+
+<div class="pagination">
+        <span class="step-links">
+            {% if book.has_previous %}
+                <a href="?page=1">&laquo; Первая</a>
+                <a href="?page={{ book.previous_page_number }}">Предыдущая</a>
+            {% endif %}
+
+            <span class="current">
+                Страница {{ book.number }} из {{ book.paginator.num_pages }}.
+            </span>
+
+            {% if book.has_next %}
+                <a href="?page={{ book.next_page_number }}">Следующая</a>
+                <a href="?page={{ book.paginator.num_pages }}">Последняя &raquo;</a>
+            {% endif %}
+        </span>
+</div>

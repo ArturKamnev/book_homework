@@ -48,6 +48,7 @@ class Tour(models.Model):
     duration = models.CharField(verbose_name="Длительность тура", max_length=50)
     created_at = models.DateField(auto_now_add=True)
     categories = models.ManyToManyField(Category)
+    views = models.PositiveIntegerField(null=True, default=0)
 
     def __str__(self):
         return f"{self.title} - {self.price} сом"

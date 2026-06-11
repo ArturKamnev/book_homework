@@ -1,0 +1,13 @@
+<h1>ФИО - {{ candidate.full_name }}</h1>
+<p>НОМЕР ТЕЛЕФОНА - {{ candidate.phone_number }}</p>
+<p>ПОЧТА - {{ candidate.email }}</p>
+<p>ДАТА РОЖДЕНИЯ - {{ candidate.date_of_birth }}</p>
+<p>ПРЕДПОЧИТАЕМАЯ ДОЛЖНОСТЬ - {{ candidate.desired_position }}</p>
+<p>ОБРАЗОВАНИЕ - {{ candidate.education }}</p>
+<p>ОПЫТ РАБОТЫ - {{ candidate.work_experience }}</p>
+<p>НАВЫКИ: {{ candidate.skills }}</p>
+
+
+<h2>Количество просмотров: {{ candidate.views }}</p>
+
+<a href="{% url 'candidates_list' %}">НАЗАД</a>

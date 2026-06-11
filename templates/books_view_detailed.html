@@ -15,5 +15,7 @@
 {% endif %}
 <p>Забронированно: {{ book_id.reservation_limit }} из 5</p>
 
+<h2>Количество просмотров: {{ book_id.views }}</p>
+
 <br>
 <a href="{% url 'book_list' %}">НАЗАД</a>

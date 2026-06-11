@@ -12,6 +12,7 @@ class Books(models.Model):
     publisher = models.CharField(max_length=50, verbose_name="Издательство книги")
     rating = models.DecimalField(verbose_name="Рейтинг книги", max_digits=2, decimal_places=1)
     cover = models.ImageField(upload_to='books/', verbose_name="Обложка книги", blank=True)
+    views = models.PositiveIntegerField(null=True, default=0)
     reservation_limit = models.PositiveSmallIntegerField(default=1, validators=[
         MinValueValidator(1), MaxValueValidator(5)
     ])

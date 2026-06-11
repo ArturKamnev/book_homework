@@ -1,5 +1,12 @@
 <h1> СПИСОК КАНДИДАТОВ </h1>
 
+<form method="get" enctype="multipart/form-data" action="{% url 'search' %}">
+
+    <input type="text" type="search" placeholder="Найти персонажа" name="s">
+    <button type="submit">Поиск</button>
+
+</form>
+
 {% if not request.user.is_authenticated %}
     <h3>Вы не вошли в свой аккаунт</h3>
     <a href="{% url 'login' %}">Войти в аккаунт</a>
@@ -20,6 +27,24 @@
         <p>Образование: {{ i.education }}</p>
         <p>Желаемая должность: {{ i.desired_position }}</p>
         <p>Навыки: {{ i.skills }}</p>
+        <a href="{% url 'candidates_list_detailed' i.id %}"> ПОДРОБНЕЕ </a>
     </li>
     {% endfor %}
 </ul>
+<div class="pagination">
+        <span class="step-links">
+            {% if candidates.has_previous %}
+                <a href="?page=1">&laquo; Первая</a>
+                <a href="?page={{ candidates.previous_page_number }}">Предыдущая</a>
+            {% endif %}
+
+            <span class="current">
+                Страница {{ candidates.number }} из {{ candidates.paginator.num_pages }}.
+            </span>
+
+            {% if candidates.has_next %}
+                <a href="?page={{ candidates.next_page_number }}">Следующая</a>
+                <a href="?page={{ candidates.paginator.num_pages }}">Последняя &raquo;</a>
+            {% endif %}
+        </span>
+</div>

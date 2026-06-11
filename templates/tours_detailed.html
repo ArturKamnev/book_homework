@@ -1,0 +1,38 @@
+<h1>Название: {{ tour.title }}</h1>
+<h2>Цена: {{ tour.price }}</h2>
+<h2>Длительность: {{ tour.duration }}</h2>
+<p>Описание: {{ tour.description }}</p>
+<p>Создано: {{ tour.created_at }}</p>
+<br>
+</br>
+
+<h2>КАТЕГОРИИ ТУРА</h2>
+
+<p>
+    {% for category in tour.categories.all %}
+        {{ category.name }}{% if not forloop.last %}, {% endif %}
+    {% empty %}
+        Категория не указана
+    {% endfor %}
+</p>
+
+<h3>ОТЗЫВЫ</h3>
+
+<ul>
+    {% for rev in tour.reviews.all %}
+    <li>
+        <p>Оценка: {{ rev.mark }}</p>
+        <p>Текст: {{ rev.text }}</p>
+        <p>Дата создания: {{ rev.created_at }}</p>
+    </li>
+    {% empty %}
+    <li>
+        <p>Отзывов пока нет</p>
+    </li>
+    {% endfor %}
+</ul>
+
+<h2>Количество просмотров: {{ tour.views }}</p>
+
+<br>
+<a href="{% url 'tour_list' %}">НАЗАД</a>
