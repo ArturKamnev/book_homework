@@ -13,7 +13,9 @@ class SearchView(generic.ListView):
     paginate_by = 2
 
     def get_queryset(self):
-        return self.model.objects.filter(title__icontains=self.request.GET.get('s', ''))
+        return self.model.objects.filter(
+            title__icontains=self.request.GET.get('s', '')
+        ).order_by('-id')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -24,16 +26,15 @@ class SearchView(generic.ListView):
 class BookListView(generic.ListView):
     template_name = 'books_view.html'
     model = models.Books
-    ordering = ['-id']
+    context_object_name = 'book'
     paginate_by = 2
 
     def get_queryset(self):
-        return self.model.objects.all()
+        return self.model.objects.all().order_by('-id')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['book'] = models.Books.objects.all()
-        context['page_obj'] = context['book']
+        context['s'] = self.request.GET.get('s', '')
         return context
 
 

@@ -11,10 +11,11 @@ class SearchView(generic.ListView):
     context_object_name = 'tours'
     model = models.Tour
     paginate_by = 3
-    ordering = ['-id']
 
     def get_queryset(self):
-        return self.model.objects.filter(title__icontains=self.request.GET.get('s', ''))
+        return self.model.objects.filter(
+            title__icontains=self.request.GET.get('s', '')
+        ).order_by('-id')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -25,17 +26,16 @@ class SearchView(generic.ListView):
 class TourListView(generic.ListView):
     template_name = 'tours.html'
     model = models.Tour
+    context_object_name = 'tours'
     paginate_by = 3
-    ordering = ['-id']
 
     def get_queryset(self):
-        return self.model.objects.all()
+        return self.model.objects.all().order_by('-id')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tours'] = models.Tour.objects.all()
         context['persons'] = models.Person.objects.all()
-        context['page_obj'] = context['tours']
+        context['s'] = self.request.GET.get('s', '')
         return context
 
 class TourListDetailedView(generic.DetailView):

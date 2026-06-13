@@ -6,14 +6,13 @@ from django.views import generic
 class BoughtProductsListView(generic.ListView):
     template_name = 'basket/products_list.html'
     model = models.Product
-    ordering = ['-id']
+    context_object_name = 'products'
 
     def get_queryset(self):
-        return self.model.objects.all()
+        return self.model.objects.all().order_by('-id')
     
     def get_context_data(self, **kwargs):
-        context =  super().get_context_data(**kwargs)
-        context['products'] = models.Product.objects.all()
+        context = super().get_context_data(**kwargs)
         return context
 
 
