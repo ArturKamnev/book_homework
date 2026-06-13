@@ -25,22 +25,20 @@
 
 </ul>
 
-{% if book.paginator %}
+{% if is_paginated %}
 <div class="pagination">
-    <span class="step-links">
-        {% if book.has_previous %}
-            <a href="?page=1">&laquo; Первая</a>
-            <a href="?page={{ book.previous_page_number }}">Предыдущая</a>
-        {% endif %}
+    {% if page_obj.has_previous %}
+        <a href="?{% if s %}s={{ s }}&{% endif %}page=1">Первая</a>
+        <a href="?{% if s %}s={{ s }}&{% endif %}page={{ page_obj.previous_page_number }}">Предыдущая</a>
+    {% endif %}
 
-        <span class="current">
-            Страница {{ book.number }} из {{ book.paginator.num_pages }}.
-        </span>
-
-        {% if book.has_next %}
-            <a href="?page={{ book.next_page_number }}">Следующая</a>
-            <a href="?page={{ book.paginator.num_pages }}">Последняя &raquo;</a>
-        {% endif %}
+    <span>
+        Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
     </span>
+
+    {% if page_obj.has_next %}
+        <a href="?{% if s %}s={{ s }}&{% endif %}page={{ page_obj.next_page_number }}">Следующая</a>
+        <a href="?{% if s %}s={{ s }}&{% endif %}page={{ page_obj.paginator.num_pages }}">Последняя</a>
+    {% endif %}
 </div>
 {% endif %}

@@ -45,6 +45,7 @@ class CandidatesListView(generic.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['candidates'] = models.CustomUser.objects.all()
+        context['page_obj'] = context['candidates']
         return context
 
 

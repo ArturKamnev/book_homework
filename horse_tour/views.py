@@ -35,6 +35,7 @@ class TourListView(generic.ListView):
         context = super().get_context_data(**kwargs)
         context['tours'] = models.Tour.objects.all()
         context['persons'] = models.Person.objects.all()
+        context['page_obj'] = context['tours']
         return context
 
 class TourListDetailedView(generic.DetailView):
