@@ -4,47 +4,54 @@ from django.http import HttpResponse
 from django.core.paginator import Paginator
 from django.db.models import F
 # Create your views here.
+from django.views import generic
 
-def search_view(request):
-    query = request.GET.get('s', '')
+class SearchView(generic.ListView):
+    template_name = 'tours.html'
+    context_object_name = 'tours'
+    model = models.Tour
+    paginate_by = 3
+    ordering = ['-id']
 
-    if query:
-        tours = models.Tour.objects.filter(title__icontains=query)
-    else:
-        return HttpResponse('Тур не найден')
+    def get_queryset(self):
+        return self.model.objects.filter(title__icontains=self.request.GET.get('s', ''))
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['s'] = self.request.GET.get('s')
+        context['persons'] = models.Person.objects.all()
+        return context
 
-    persons = models.Person.objects.all()
+class TourListView(generic.ListView):
+    template_name = 'tours.html'
+    model = models.Tour
+    paginate_by = 3
+    ordering = ['-id']
 
-    return render(request, 'tours.html',{'tours': tours, 'persons': persons,})
+    def get_queryset(self):
+        return self.model.objects.all()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tours'] = self.model.objects.all()
+        context['persons'] = models.Person.objects.all()
+        return context
 
-def tour_list_view(request):
-    if request.method == "GET":
-        tours = models.Tour.objects.all()
-        paginator = Paginator(tours, 3)
-        page = request.GET.get('page')
-        page_obj = paginator.get_page(page)
+class TourListDetailedView(generic.DetailView):
+    pk_url_kwarg = 'id'
+    model = models.Tour
+    template_name = 'tours_detailed.html'
+    context_object_name = 'tour'
 
-        persons = models.Person.objects.all()
-        context = {
-            'tours': page_obj,
-            'persons': persons,
-        }
-    return render(request, template_name='tours.html', context=context)
+    def get_object(self, queryset = None):
+        obj = super().get_object(queryset)
+        request = self.request
+        views_tours = request.session.get('viewed_tour', [])
 
-def tour_list_detailed_view(request, id):
-    if request.method == 'GET':
-        tour = get_object_or_404(models.Tour, id=id)
-        views_tour = request.session.get('viewed_tour', [])
+        if obj.pk not in views_tours:
+            self.model.objects.filter(pk=obj.pk).update(views=F('views') + 1)
+            views_tours.append(obj.pk)
+            request.session['viewed_tour'] = views_tours
+            obj.refresh_from_db()
+        return obj
 
-        if id not in views_tour:
-            tour.views = F('views') + 1
-            views_tour.append(id)
-            tour.save()
-
-            tour.refresh_from_db()
-        request.session['viewed_tour'] = views_tour
-
-        context = {
-                'tour': tour
-            }
-    return render(request, template_name='tours_detailed.html', context=context)

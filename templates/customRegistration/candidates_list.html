@@ -12,11 +12,9 @@
     <a href="{% url 'login' %}">Войти в аккаунт</a>
 {% else %}
     <h3>Вы вошли как {{ request.user.username }}</h3>
-    <form method="post">
-
-    {% csrf_token %}
-    <a href="{% url 'logout' %}">Выйти из аккаунта</a>
-
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Выйти из аккаунта</button>
     </form>
 {% endif %}
 

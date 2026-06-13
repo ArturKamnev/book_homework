@@ -5,68 +5,65 @@ from django.core.paginator import Paginator
 from django.contrib.auth import login, logout
 from django.http import HttpResponse
 from django.db.models import F
+from django.views import generic
 
-def search_view(request):
-    query = request.GET.get('s', '')
-    if query:
-        candidate = models.CustomUser.objects.filter(full_name__icontains=query)
-    else:
-        return HttpResponse('Кандидаты не найдены')
-    return render(request=request, template_name='customRegistration/candidates_list.html', context={'candidates': candidate})
 
-def register_view(request):
-    if request.method == "POST":
-        form = forms.CustomRegisterForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('/login/')
-        
-    else:
-        form = forms.CustomRegisterForm()
-    return render(request=request, template_name='customRegistration/registration.html', context={'form': form})
+class SearchView(generic.ListView):
+    template_name = 'customRegistration/candidates_list.html'
+    context_object_name = 'candidates'
+    model = models.CustomUser
+    paginate_by = 3
+    ordering = ['-id']
 
-def auth_login_view(request):
-    if request.method == "POST":
-        form = forms.CustomLoginForm(data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect('/candidates_list/')
-        
-    else:
-        form = forms.CustomLoginForm()
-    return render(request=request, template_name='customRegistration/login.html', context={'form': form})
+    def get_queryset(self):
+        return self.model.objects.filter(full_name__icontains=self.request.GET.get('s', ''))
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['s'] = self.request.GET.get('s')
+        return context
 
-def auth_logout_view(request):
-    logout(request)
-    return redirect('/login/')
 
-def candidates_list_view(request):
-    candidates = models.CustomUser.objects.all().order_by('-id')
-    paginator = Paginator(candidates, 3)
-    page = request.GET.get('page')
-    page_obj = paginator.get_page(page)
+class RegisterView(generic.CreateView):
+    form_class = forms.CustomRegisterForm
+    success_url = '/login/'
+    template_name = 'customRegistration/registration.html'
 
-    context = {
-        'candidates': page_obj
-    }
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        form.save()
+        return super().form_valid(form=form)
 
-    return render(request, 'customRegistration/candidates_list.html', context)
+class CandidatesListView(generic.ListView):
+    model = models.CustomUser
+    template_name = 'customRegistration/candidates_list.html'
+    paginate_by = 3
+    ordering = ['-id']
 
-def candidate_detailed_view(request, id):
-    if request.method == 'GET':
-        candidate = get_object_or_404(models.CustomUser, id=id)
-        views_candidate = request.session.get('viewed_candidate', [])
+    def get_queryset(self):
+        return self.model.objects.all()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['candidates'] = self.model.objects.all()
+        return context
 
-        if id not in views_candidate:
-            candidate.views = F('views') + 1
-            views_candidate.append(id)
 
-            candidate.save()
-            candidate.refresh_from_db()
-        request.session['viewed_candidate'] = views_candidate
+class CandidateDetailedView(generic.DetailView):
+    model = models.CustomUser
+    template_name = 'customRegistration/candidate_detailed.html'
+    pk_url_kwarg = 'id'
+    context_object_name = 'candidate'
 
-        context = {
-            'candidate': candidate
-        }
-    return render(request, template_name='customRegistration/candidate_detailed.html', context=context)
+    def get_object(self, queryset = None):
+        obj = super().get_object(queryset)
+        request = self.request
+        views_candidates = request.session.get('viewed_candidate', [])
+
+        if obj.pk not in views_candidates:
+            self.model.objects.filter(pk=obj.pk).update(views=F('views') + 1)
+            views_candidates.append(obj.pk)
+            request.session['viewed_candidate'] = views_candidates
+            obj.refresh_from_db()
+
+        return obj

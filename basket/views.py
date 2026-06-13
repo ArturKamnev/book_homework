@@ -1,45 +1,58 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from . import models, forms
+from django.views import generic
 # Create your views here.
 
-def bought_products_list_view(request):
-    if request.method == "GET":
-        products = models.Product.objects.all().order_by('-id')
-        context = {
-            'products': products
-        }
-    return render(request, template_name='basket/products_list.html', context=context)
+class BoughtProductsListView(generic.ListView):
+    template_name = 'basket/products_list.html'
+    model = models.Product
+    ordering = ['-id']
 
-def create_products(request):
-    if request.method == "POST":
-        form = forms.ProductsForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('products_list')
-    else:
-        form = forms.ProductsForm()
+    def get_queryset(self):
+        return self.model.objects.all()
+    
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        context['products'] = models.Product.objects.all()
+        return context
 
-    context = {
-        'form': form
-    }
-    return render(request, template_name='basket/create_product.html', context=context)
 
-def delete_products(request, id):
-    game_id = get_object_or_404(models.Product, id=id)
-    game_id.delete()
-    return redirect('products_list')
+class CreateProductView(generic.CreateView):
+    success_url = '/products_list/'
+    form_class = forms.ProductsForm
+    template_name = 'basket/create_product.html'
 
-def update_products(request, id):
-    product_id = get_object_or_404(models.Product, id=id)
-    if request.method == "POST":
-        form = forms.ProductsForm(request.POST, request.FILES, instance=product_id)
-        if form.is_valid():
-            form.save()
-            return redirect('products_list')
-    else:
-        form = forms.ProductsForm(instance=product_id)
-    context = {
-        'form': form,
-        'product_id': product_id
-    }
-    return render(request, template_name='basket/update_product.html', context=context)
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return super(CreateProductView, self).form_valid(form=form)
+    
+
+
+
+class DeleteProductView(generic.DeleteView):
+    success_url = '/products_list/'
+    model = models.Product
+    template_name = 'basket/confirm_delete.html'
+    context_object_name = 'product_id'
+
+    def get_object(self, **kwargs):
+        product_id = self.kwargs.get('id')
+        return get_object_or_404(self.model, id=product_id)
+
+
+
+class UpdateProductView(generic.UpdateView):
+    template_name = 'basket/update_product.html'
+    form_class = forms.ProductsForm
+    model = models.Product
+    success_url = '/products_list/'
+
+    def get_object(self, **kwargs):
+        product_id = self.kwargs.get('id')
+        return get_object_or_404(self.model, id=product_id)
+    
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return super(UpdateProductView, self).form_valid(form=form)
+        
+

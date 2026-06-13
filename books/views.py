@@ -4,41 +4,52 @@ from datetime import datetime
 from . import models
 from django.db.models import F
 from django.core.paginator import Paginator
+from django.views import generic
 
-def search_view(request):
-    query = request.GET.get('s', '')
-    if query:
-        book = models.Books.objects.filter(title__icontains=query)
-    else:
-        return HttpResponse("Книга не найдена")
-    return render(request, template_name='books_view.html', context={'book': book})
+class SearchView(generic.ListView):
+    template_name = 'books_view.html'
+    model = models.Books
+    context_object_name = 'book'
+    paginate_by = 2
 
-# Create your views here.
-def book_list_view(request):
-    if request.method == "GET":
-        book = models.Books.objects.all().order_by('-id')
-        paginator = Paginator(book, 2)
-        page = request.GET.get('page')
-        page_obj = paginator.get_page(page)
-        context = {
-            'book': page_obj,
-        }
-    return render(request=request, template_name='books_view.html', context=context)
-
-def book_list_detail_view(request, id):
-    if request.method == "GET":
-        book_id = get_object_or_404(models.Books, id=id)
-        views_book = request.session.get('viewed_book', [])
-
-        if id not in views_book:
-            book_id.views = F('views') + 1
-            views_book.append(id)
-            book_id.save()
-            book_id.refresh_from_db()
-        request.session['viewed_book'] = views_book
+    def get_queryset(self):
+        return self.model.objects.filter(title__icontains=self.request.GET.get('s', ''))
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['s'] = self.request.GET.get('s')
+        return context
 
 
-        context = {
-            'book_id': book_id,
-        }
-    return render(request=request, template_name='books_view_detailed.html', context=context)
+class BookListView(generic.ListView):
+    template_name = 'books_view.html'
+    model = models.Books
+    ordering = ['-id']
+
+    def get_queryset(self):
+        return self.model.objects.all()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['book'] = models.Books.objects.all()
+        return context
+
+
+class BookDetailView(generic.DetailView):
+    template_name = 'books_view_detailed.html'
+    model = models.Books
+    pk_url_kwarg = 'id'
+    context_object_name = 'book_id'
+
+    def get_object(self, queryset = None):
+        obj = super().get_object(queryset)
+        request = self.request
+        views_books = request.session.get('viewed_book', [])
+
+        if obj.pk not in views_books:
+            self.model.objects.filter(pk=obj.pk).update(views=F('views') + 1)
+            views_books.append(obj.pk)
+            request.session['viewed_book'] = views_books
+            obj.refresh_from_db()
+        return obj
+    
