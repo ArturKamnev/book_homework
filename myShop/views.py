@@ -4,11 +4,11 @@ from django.views import generic
 
 class ProductListView(generic.ListView):
     template_name = 'my_shop/products.html'
-    ordering = ['-id']
     model = models.Product
+    context_object_name = 'products'
 
     def get_queryset(self):
-        return self.model.objects.all()
+        return self.model.objects.all().order_by('-id')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -18,10 +18,10 @@ class ProductListView(generic.ListView):
 class CategoryListView(generic.ListView):
     template_name = 'my_shop/categories.html'
     model = models.Category
-    ordering = ['-id']
+    context_object_name = 'categories'
 
     def get_queryset(self):
-        return self.model.objects.all()
+        return self.model.objects.all().order_by('-id')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

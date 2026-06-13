@@ -8,18 +8,20 @@ from django.db.models import F
 from django.views import generic
 
 
-class CandidatesListView(generic.ListView):
-    model = models.CustomUser
+class SearchView(generic.ListView):
     template_name = 'customRegistration/candidates_list.html'
     context_object_name = 'candidates'
+    model = models.CustomUser
     paginate_by = 3
 
     def get_queryset(self):
-        return self.model.objects.all().order_by('-id')
+        return self.model.objects.filter(
+            full_name__icontains=self.request.GET.get('s', '')
+        ).order_by('-id')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['s'] = self.request.GET.get('s', '')
+        context['s'] = self.request.GET.get('s')
         return context
 
 
