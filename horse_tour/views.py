@@ -33,7 +33,7 @@ class TourListView(generic.ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tours'] = self.model.objects.all()
+        context['tours'] = models.Tour.objects.all()
         context['persons'] = models.Person.objects.all()
         return context
 

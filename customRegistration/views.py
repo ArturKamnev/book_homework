@@ -31,7 +31,6 @@ class RegisterView(generic.CreateView):
 
     def form_valid(self, form):
         print(form.cleaned_data)
-        form.save()
         return super().form_valid(form=form)
 
 class CandidatesListView(generic.ListView):
@@ -45,7 +44,7 @@ class CandidatesListView(generic.ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['candidates'] = self.model.objects.all()
+        context['candidates'] = models.CustomUser.objects.all()
         return context
 
 
