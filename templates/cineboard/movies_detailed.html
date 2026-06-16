@@ -26,13 +26,37 @@
 {% endif %}
 
 <h2>ЗАБРОНИРОВАТЬ VIP МЕСТА</h2>
-<a href="{% url 'reservation_vip_place' %}"></a>
+<a href="{% url 'reservation_vip_place' %}">ЗАБРОНИРОВАТЬ ВИП МЕСТО</a>
 <br>
 <h2>СОЗДАТЬ ВИП МЕСТА</h2>
-<a href="{% url 'create_vip_place' %}"></a>
+<a href="{% url 'create_vip_place' %}">СОЗДАТЬ ВИП МЕСТО</a>
+
+<h2>VIP места этого фильма</h2>
+
+<ul>
+    {% for seat in vip_places %}
+        <li>
+            VIP место №{{ seat.seat_number }}
+
+            {% if seat.reservation %}
+                — занято
+            {% else %}
+                — свободно
+            {% endif %}
+        </li>
+    {% empty %}
+        <li>VIP места пока не добавлены</li>
+    {% endfor %}
+</ul>
 
 <br>
 <h1>Комментарии</h1>
+
+{% if user.is_authenticated %}
+    <a href="{% url 'create_comment' movie.id %}">Добавить комментарий</a>
+{% else %}
+    <p>Войдите в аккаунт, чтобы оставить комментарий</p>
+{% endif %}
 
 <ul>
     {% for i in comments %}

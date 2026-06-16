@@ -29,7 +29,6 @@
     <a href="{% url 'login' %}">Войти в аккаунт</a>
 {% else %}
     <h3>Вы вошли как {{ request.user.username }}</h3>
-    <a href="{% url 'create_comment' %}">СОЗДАТЬ КОММЕНТАРИЙ</a>
 
     <br>
     <form method="post" action="{% url 'logout' %}">

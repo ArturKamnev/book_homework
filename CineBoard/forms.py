@@ -14,14 +14,16 @@ class GenreForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     class Meta:
         model = models.Comment
-        fields = '__all__'
+        fields = ['text']
+
 
 class VipPlaceForm(forms.ModelForm):
     class Meta:
-        model = models.VipPlace
-        fields = '__all__'
+        model = models.VipSeat
+        fields = ['movie', 'seat_number']
+
 
 class VipReservationForm(forms.ModelForm):
     class Meta:
         model = models.VipReservation
-        fields = '__all__'
+        fields = ['seat']

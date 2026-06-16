@@ -32,14 +32,14 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
-        return self.movie[:20]
+        return str(self.place)
     
 class VipPlace(models.Model):
     place = models.PositiveIntegerField(verbose_name="ВИП место")
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.place
+        return str(self.place)
 
 class VipSeat(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='vip_seats')

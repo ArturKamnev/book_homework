@@ -3,6 +3,7 @@ from django.views import generic
 from . import models
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from . import forms
+from django.urls import reverse
 # from django.contrib.auth.models import User
 # Create your views here.
 
@@ -32,12 +33,15 @@ class MovieDetailedView(generic.DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         comment = models.Comment.objects.filter(movie=self.object)
-        vip_place = models.VipPlace.objects.filter(movie=self.object)
-        reservation = models.VipReservation.objects.filter(seat=vip_place)
+        vip_place = models.VipSeat.objects.filter(movie=self.object)
+        reservation = models.VipReservation.objects.filter(seat__movie=self.object)
+
         context['vip_places'] = vip_place
         context['reservations'] = reservation
         context['comments'] = comment
+
         return context
     
 class MovieSearchView(generic.ListView):
@@ -122,13 +126,20 @@ class MoviesOfGenreView(generic.ListView):
         return context
     
 class CreateCommentView(generic.CreateView):
-    success_url = '/movies_list/'
     template_name = 'cineboard/create_comment.html'
     form_class = forms.CommentForm
 
+    def dispatch(self, request, *args, **kwargs):
+        self.movie = get_object_or_404(models.Movie, id=kwargs['id'])
+        return super().dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
-        print(form.cleaned_data)
-        return super().form_valid(form=form)
+        form.instance.movie = self.movie
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('movie_detailed', kwargs={'id': self.movie.id})
     
 class CreateVipPlace(generic.CreateView):
     template_name = 'cineboard/create_vip_place.html'
@@ -145,5 +156,14 @@ class ReservVipPlace(generic.CreateView):
     form_class = forms.VipReservationForm
 
     def form_valid(self, form):
-        print(form.cleaned_data)
+        if models.VipReservation.objects.filter(user=self.request.user).exists():
+            return redirect('/movies_list/')
+
+        seat = form.cleaned_data['seat']
+
+        if models.VipReservation.objects.filter(seat=seat).exists():
+            return redirect('/movies_list/')
+
+        form.instance.user = self.request.user
+
         return super().form_valid(form)

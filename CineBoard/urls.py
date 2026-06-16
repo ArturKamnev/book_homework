@@ -15,7 +15,7 @@ urlpatterns = [
     path('movie/create_movie/', views.MovieCreateView.as_view(), name='create_movie'),
     path('movie/create_genre/', views.GenreCreateView.as_view(), name='create_genre'),
     path('movies_list/<int:id>', views.MoviesOfGenreView.as_view(), name='movies_of_genre'),
-    path('movie/create_comment/', views.CreateCommentView.as_view(), name='create_comment'),
+    path('movie/create_comment/<int:id>/', views.CreateCommentView.as_view(), name='create_comment'),
     path('movie/create_vip_place/', views.CreateVipPlace.as_view(), name='create_vip_place'),
     path('movie/reservation_vip_place/', views.ReservVipPlace.as_view(), name='reservation_vip_place'),
 ]
