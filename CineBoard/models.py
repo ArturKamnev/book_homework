@@ -9,7 +9,7 @@ class Genre(models.Model):
     def __str__(self):
         return self.title
 
-# Create your models here.
+
 class Movie(models.Model):
     title = models.CharField(max_length=100, verbose_name="Название фильма")
     genre = models.ManyToManyField(Genre)
@@ -24,29 +24,24 @@ class Movie(models.Model):
 
     def __str__(self):
         return self.title
-    
+
+
 class Comment(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='comments', null=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    text = models.TextField(null=True)
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return str(self.place)
-    
-class VipPlace(models.Model):
-    place = models.PositiveIntegerField(verbose_name="ВИП место")
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+        return self.text[:20]
 
-    def __str__(self):
-        return str(self.place)
 
 class VipSeat(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='vip_seats')
     seat_number = models.PositiveIntegerField()
 
     def __str__(self):
-        return f'{self.movie.title} - VIP место {self.seat_number}'
+        return str(self.seat_number)
 
 
 class VipReservation(models.Model):
@@ -55,4 +50,4 @@ class VipReservation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.user.username} - {self.seat}'
+        return str(self.seat)
