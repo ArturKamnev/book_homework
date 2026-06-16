@@ -1,0 +1,51 @@
+<h1>Название: {{ movie.title }}</h1>
+<h2>Жанр:
+    {% if movie.genre.exists %}
+        {% for g in movie.genre.all %}
+            {{ g.title }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    {% else %}
+        Нет жанра
+    {% endif %}
+</h2>
+<p>Описание: {{ movie.description }}</p>
+<p>Дата релиза: {{ movie.release_date }}</p>
+<p>Длительность: {{ movie.duration }} мин.</p>
+<p>Язык: {{ movie.language }}</p>
+<p>Возрастное ограничение: {{ movie.age_rating }}</p>
+<p>Рейтинг: {{ movie.rating }}</p>
+
+{% if movie.photo %}
+    <img src="{{ movie.photo.url }}" alt="{{ movie.title }}" style="max-width: 100%; height: auto;">
+{% else %}
+    <p>Изображение фильма не было добавлено</p>
+{% endif %}
+
+{% if movie.trailer_url %}
+    <p>Трейлер: <a href="{{ movie.trailer_url }}" target="_blank" rel="noopener noreferrer">Смотреть трейлер</a></p>
+{% endif %}
+
+<h2>ЗАБРОНИРОВАТЬ VIP МЕСТА</h2>
+<a href="{% url 'reservation_vip_place' %}"></a>
+<br>
+<h2>СОЗДАТЬ ВИП МЕСТА</h2>
+<a href="{% url 'create_vip_place' %}"></a>
+
+<br>
+<h1>Комментарии</h1>
+
+<ul>
+    {% for i in comments %}
+    <li>
+        <p>{{ i.user }} - {{ i.text }}</p>
+    </li>
+    {% empty %}
+    <h2>Комментарии не были добавлены</h2>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'delete_movie' movie.id %}">Удалить</a>
+<a href="{% url 'update_movie' movie.id %}">Редактировать</a>
+
+<br>
+<a href="{% url 'movies_list' %}">НАЗАД</a>

@@ -1,0 +1,10 @@
+<h1>СОЗДАНИЕ ФИЛЬМА</h1>
+
+<form method="post" enctype="multipart/form-data">
+
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit"> СОЗДАТЬ ФИЛЬМ </button>
+
+</form>
+<a href="{% url 'movies_list' %}"> ОТМЕНА </a>

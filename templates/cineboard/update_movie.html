@@ -1,0 +1,9 @@
+<h1>изменить продукт {{ movie.name }}</h1>
+<a href="{% url 'movies_list' %}">Отмена</a>
+<form method="POST" enctype="multipart/form-data">
+
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Отправить</button>
+    
+</form>

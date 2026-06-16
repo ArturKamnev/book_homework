@@ -1,0 +1,63 @@
+<h1>ФИЛЬМЫ</h1>
+
+<form method="get" enctype="multipart/form-data" action="{% url 'search' %}">
+
+    <input type="search" placeholder="Найти фильм" name="s">
+    <button type="submit">Поиск</button>
+
+</form>
+
+<a href="{% url 'create_movie' %}">СОЗДАТЬ ФИЛЬМ</a>
+<a href="{% url 'create_genre' %}">СОЗДАТЬ ЖАНР</a>
+
+<br>
+
+{% for genre in genres %}
+    <a href="{% url 'movies_of_genre' genre.id %}">{{ genre.title }}{% if not forloop.last %}, {% endif %}</a>
+{% empty %}
+    <p>Жанры не указаны</p>
+{% endfor %}
+<br>
+<a href="{% url 'movies_list' %}"> СБРОСИТЬ ФИЛЬТР </a>
+
+
+{% if not request.user.is_authenticated %}
+    <h3>
+        Вы не вошли в свой аккаунт
+        Войдите чтобы добавлять комментарии к фильмам
+    </h3>
+    <a href="{% url 'login' %}">Войти в аккаунт</a>
+{% else %}
+    <h3>Вы вошли как {{ request.user.username }}</h3>
+    <a href="{% url 'create_comment' %}">СОЗДАТЬ КОММЕНТАРИЙ</a>
+
+    <br>
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Выйти из аккаунта</button>
+    </form>
+{% endif %}
+
+<ul>
+
+    {% for i in movies %}
+    <li>
+        <h2>Название: {{ i.title }}</h2>
+        <p>
+            {% for genre in i.genre.all %}
+                {{ genre.title }}{% if not forloop.last %}, {% endif %}
+            {% empty %}
+                Жанр не указан
+            {% endfor %}
+        </p>
+        {% if i.photo %}
+        <img src="{{ i.photo.url }}" alt="">
+        {% else %}
+        <p>Изображение обложки не было добавлено</p>
+        {% endif %}
+        <br>
+        <a href="{% url 'movie_detailed' i.id %}">Подробная информация о фильме</a>
+    </li>
+    {% endfor %}
+
+</ul>

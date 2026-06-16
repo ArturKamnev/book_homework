@@ -1,0 +1,9 @@
+<h1>ПОДТВЕРДИТЕ УДАЛЕНИЕ ФИЛЬМА {{ movie_id.title }}</h1>
+
+<form method="post">
+
+    {% csrf_token %}
+    <button type="submit">Удалить</button>
+
+</form>
+<a href="{% url 'movies_list' %}">Отмена</a>

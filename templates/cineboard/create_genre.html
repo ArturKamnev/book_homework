@@ -1,0 +1,10 @@
+<h1>СОЗДАНИЕ ЖАНРА</h1>
+
+<form method="post">
+
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">ОТПРАВИТЬ</button>
+
+</form>
+<a href="{% url 'movies_list' %}">НАЗАД</a>
